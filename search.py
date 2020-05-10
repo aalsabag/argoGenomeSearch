@@ -11,7 +11,8 @@ from Bio.Alphabet import generic_dna, generic_protein
 def regular_search(seq, file_name):
     i = 0
     total_count = 0
-    f= open(f"result_{file_name}","w+")
+    result_file = os.path.basename(file_name)
+    f= open(f"result_{result_file}","w+")
     for seq_record in SeqIO.parse(file_name, "fasta"):
         total_count += 1
         index = seq_record.seq.find(seq)

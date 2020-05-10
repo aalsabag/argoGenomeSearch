@@ -18,15 +18,18 @@ spec:
     steps:
     - - name: split-files
         template: split
-    # - - name: search-files
-    #     template: search
-    #     arguments:
-    #       parameters:
-    #       - name: file
-    #         value: "{{item}}"
-    #       artifacts:
-    #       - name: split-files
-    #         from: "{{steps.split-files.outputs.artifacts.split-files}}"
+    - - name: search-files
+        template: search
+        arguments:
+          parameters:
+          - name: file
+            value: "{{item}}"
+          artifacts:
+          - name: split-files
+            from: "{{steps.split-files.outputs.artifacts.split-files}}"
+        withSequence:
+          start: "1"
+          end: "{{workflow.parameters.split-file-count}}"
 
   - name: split
     volumes:
@@ -46,13 +49,14 @@ spec:
       - name: split-files
         path: /app
 
-  # - name: search
-  #   inputs:
-  #     artifacts:
-  #     # unpack the message input artifact
-  #     # and put it at /tmp/message
-  #     - name: message
-  #       path: /tmp/message
-  #   container:
-  #     image: filesearch:latest
-  #     args: ["-f {{inputs.parameters.file}} -s {{workflow.parameters.sequence}}"]
+  - name: search
+    inputs:
+      parameters:
+      - name: file
+      artifacts:
+      - name: split-files
+        path: /app/search
+    container:
+      image: filesearch:latest
+      imagePullPolicy: Never
+      args: ["-f", "./search/small_file_{{workflow.parameters.file}}_{{inputs.parameters.file}}", "-s", "{{workflow.parameters.sequence}}"]
