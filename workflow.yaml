@@ -60,3 +60,7 @@ spec:
       image: filesearch:latest
       imagePullPolicy: Never
       args: ["-f", "./search/small_file_{{workflow.parameters.file}}_{{inputs.parameters.file}}", "-s", "{{workflow.parameters.sequence}}"]
+    outputs:
+      artifacts:
+      - name: result
+        path: /app/result_small_file_{{workflow.parameters.file}}_{{inputs.parameters.file}}
