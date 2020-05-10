@@ -1,0 +1,58 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  name : genome-search
+  generateName: genome-search-
+spec:
+  entrypoint: split-search
+  arguments:
+    parameters:
+    - name: split-file-count
+      value: 10 #defines how many files to split this in to
+    - name: sequence
+      value: "NDVTSLISTTYPYTGPPPMSHGSSTKYT"
+    - name: file
+      value: influenza_xsmall.faa
+  templates:
+  - name: split-search
+    steps:
+    - - name: split-files
+        template: split
+    # - - name: search-files
+    #     template: search
+    #     arguments:
+    #       parameters:
+    #       - name: file
+    #         value: "{{item}}"
+    #       artifacts:
+    #       - name: split-files
+    #         from: "{{steps.split-files.outputs.artifacts.split-files}}"
+
+  - name: split
+    volumes:
+      - name: files
+        hostPath:
+          type: FileOrCreate
+          path: "/C/Users/--a/Documents/argoGenomeSearch/{{workflow.parameters.file}}"
+    container:
+      image: filesplit:latest
+      args: ["-f", "{{workflow.parameters.file}}", "-s", "{{workflow.parameters.split-file-count}}"]
+      imagePullPolicy: Never
+      volumeMounts:
+        - name: files
+          mountPath: /app/{{workflow.parameters.file}}
+    outputs:
+      artifacts:
+      - name: split-files
+        path: /app
+
+  # - name: search
+  #   inputs:
+  #     artifacts:
+  #     # unpack the message input artifact
+  #     # and put it at /tmp/message
+  #     - name: message
+  #       path: /tmp/message
+  #   container:
+  #     image: filesearch:latest
+  #     args: ["-f {{inputs.parameters.file}} -s {{workflow.parameters.sequence}}"]
