@@ -67,4 +67,4 @@ And then add it to your path and run it like so:
 ```
 minio server F:/Data #or whatever drive you want to use
 ```
-Ideally this would be remote.
+Ideally this would be a remote server.
