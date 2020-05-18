@@ -30,6 +30,12 @@ spec:
         withSequence:
           start: "1"
           end: "{{workflow.parameters.split-file-count}}"
+    - - name: compile-results
+        template: compile
+        arguments:
+          artifacts:
+          - name: file-list
+            from: "{{steps.search-files.outputs.artifacts.result}}"
 
   - name: split
     volumes:
@@ -64,3 +70,18 @@ spec:
       artifacts:
       - name: result
         path: /app/result_small_file_{{workflow.parameters.file}}_{{inputs.parameters.file}}
+
+  - name: compile
+    inputs:
+      artifacts:
+      - name: file-list
+        path: /app
+    script:
+      image: debian:9.4
+      command: [bash]
+      source: |
+        cat /app/* > /app/all.txt
+    outputs:
+      artifacts:
+        - name: final
+          path: /app/all.txt
