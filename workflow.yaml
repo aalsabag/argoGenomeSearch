@@ -42,7 +42,7 @@ spec:
       - name: files
         hostPath:
           type: FileOrCreate
-          path: "/C/Users/--a/Documents/argoGenomeSearch/{{workflow.parameters.file}}"
+          path: "/host_mnt/C/Users/--a/Documents/argoGenomeSearch/{{workflow.parameters.file}}"
     container:
       image: filesplit:latest
       args: ["-f", "{{workflow.parameters.file}}", "-s", "{{workflow.parameters.split-file-count}}"]
@@ -76,11 +76,10 @@ spec:
       artifacts:
       - name: file-list
         path: /app
-    script:
-      image: debian:9.4
-      command: [bash]
-      source: |
-        cat /app/* > /app/all.txt
+    container:
+      image: alpine:latest
+      command: [sh, -c]
+      args: ["cat /app/* > /app/all.txt"]
     outputs:
       artifacts:
         - name: final

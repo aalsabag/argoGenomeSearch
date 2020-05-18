@@ -29,10 +29,14 @@ A helm chart has been created to configure and use minio so all you need to do i
 ```
 $ helm repo add stable https://kubernetes-charts.storage.googleapis.com/ # official Helm stable charts
 $ helm repo update
-$ helm install argo-artifacts stable/minio --set service.type=LoadBalancer --set fullnameOverride=argo-artifa
+$ helm install argo-artifacts stable/minio --set service.type=LoadBalancer --set fullnameOverride=argo-artifacts
 ```
 And then it should be running on port 9000 by default!
-3. Create a bucket called `my-bucket`
+3. Create a bucket called `my-bucket` . The default creds are
+```
+AccessKey: AKIAIOSFODNN7EXAMPLE
+SecretKey: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+```
 4. Configure the workflow controller to use minio
 ```
 kubectl edit cm -n argo workflow-controller-configmap
