@@ -6,4 +6,4 @@ RUN pip install -r /requirements.txt
 COPY ./ /app
 WORKDIR /app
 
-ENTRYPOINT ["python", "-m", "search"]
+ENTRYPOINT ["python", "search.py"]

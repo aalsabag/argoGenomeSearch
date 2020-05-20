@@ -70,6 +70,8 @@ spec:
       artifacts:
       - name: result
         path: /app/result_small_file_{{workflow.parameters.file}}_{{inputs.parameters.file}}
+        archive:
+          none: {}
 
   - name: compile
     inputs:
