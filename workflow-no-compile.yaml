@@ -5,14 +5,6 @@ metadata:
   generateName: genome-search-
 spec:
   entrypoint: split-search
-  volumeClaimTemplates:
-    - metadata:
-        name: results
-      spec:
-        accessModes: ["ReadWriteMany"]
-        resources:
-          requests:
-            storage: 1Gi
   arguments:
     parameters:
     - name: split-file-count
@@ -27,7 +19,7 @@ spec:
     - - name: split-files
         template: split
     - - name: search-files
-        template: search-files
+        template: search
         arguments:
           parameters:
           - name: file
@@ -38,8 +30,6 @@ spec:
         withSequence:
           start: "1"
           end: "{{workflow.parameters.split-file-count}}"
-    - - name: compile-results
-        template: compile
 
   - name: split
     volumes:
@@ -59,7 +49,7 @@ spec:
       - name: split-files
         path: /app
 
-  - name: search-files
+  - name: search
     inputs:
       parameters:
       - name: file
@@ -67,28 +57,12 @@ spec:
       - name: split-files
         path: /app/search
     container:
-      volumeMounts:
-        - name: results
-          mountPath: /results
       image: filesearch:latest
       imagePullPolicy: Never
-      args: ["-f", "./search/small_file_{{workflow.parameters.file}}_{{inputs.parameters.file}}", "-s", "{{workflow.parameters.sequence}}", "-d", "/results"]
+      args: ["-f", "./search/small_file_{{workflow.parameters.file}}_{{inputs.parameters.file}}", "-s", "{{workflow.parameters.sequence}}"]
     outputs:
       artifacts:
-      - name: result-file
+      - name: result
         path: /app/result_small_file_{{workflow.parameters.file}}_{{inputs.parameters.file}}
         archive:
           none: {}
-
-  - name: compile
-    container:
-      volumeMounts:
-        - name: results
-          mountPath: /results
-      image: alpine:latest
-      command: [sh, -c]
-      args: ["mkdir /app; cat /results/* >> /app/all.txt"]
-    outputs:
-      artifacts:
-        - name: final
-          path: /app/all.txt

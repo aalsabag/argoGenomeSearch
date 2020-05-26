@@ -2,6 +2,8 @@ import os
 import argparse
 import math
 import time
+import glob
+import shutil
 
 from Bio.Seq import Seq
 from Bio.Alphabet import IUPAC
@@ -28,10 +30,14 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-f', '--file', help="Specify file for which to search. It should be in the container or be a downloadable link", type = str, default = "influenza_xsmall.faa", required = False)
     parser.add_argument('-s', '--sequence', help="Specify sequence of amino acids. ie. NDVTSL", type = str)
+    parser.add_argument('-d', '--directory', help="Optional. Copy results to certain directory", type = str)
     arguments = parser.parse_args()
 
     start_time = time.time() #Timing execution
     regular_search(file_name = arguments.file, seq = arguments.sequence)
+    if arguments.directory is not None:
+        for file in glob.glob("result*"):
+            shutil.copy(file, arguments.directory)
     print("--- %s seconds ---" % (time.time() - start_time))
 
 if __name__ == '__main__':
