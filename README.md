@@ -13,7 +13,15 @@ Next we create a container that will search a file for us. The logic for searchi
 ```
 docker build . -f Dockerfile.search -t filesearch:latest
 ```
+Now we can add a FASTA formatted FAA file in our current working directory. I have one called influenze_xsmall.faa
 
+Now we can submit our workflow through the argo cli. 
+```
+argo submit workflow.yaml --parameter sequence=NDVTSLISTTYPYTGPPPMSHGSSTKYT --parameter file=influenza_xsmall.yaml --parameter split-file-count=10
+```
+Here we specify the sequence we are searching for, the name of the file in our local dir, and the number of parallel search jobs we want to have running. To use default parameters, we can just run `argo submit workflow.yaml`
+
+[workflow.yaml](./workflow.yaml) uses volume mounts as a method for compiling all of the results in a single file. This is until this [issue](https://github.com/argoproj/argo/issues/934) is resolved. You can see the reasons why this might be a bad idea depending on what type of infrastructure you are using. Otherwise, a basic method with uncompiled results (results in different files) can be found in [workflow-no-compile.yaml](./workflow-no-compile.yaml).
 ### [Installing Argo](#argo)
 ```bash
 kubectl create namespace argo
