@@ -1,9 +1,11 @@
-
+# Argo Genome Search
+The Argo genome search project is an extension of the k8s genome search project. It's aim is to use argo to execute a pipeline that eventually runs parallel jobs to search for a particular sequence of amino acids. This is in contrast to the creation of plain k8s jobs executing in parallel
 ## Prerequisites
 1. [Argo](#argo)
 2. [Minio or a similar artifact storage tool](#minio)
 
 ![execution](./execution.gif)
+
 ## Getting Started
 We begin by creating a container that will split a given faa file in proper FASTA format. The logic for splitting the files can be found in [split.py](./split.py). It takes in a file name as a parameter as well as a number defining how many files it should be split into. To create the docker container we execute:
 ```
