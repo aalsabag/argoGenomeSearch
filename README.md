@@ -19,7 +19,7 @@ Now we can add a FASTA formatted FAA file in our current working directory. I ha
 
 Now we can submit our workflow through the argo cli. 
 ```
-argo submit workflow.yaml --parameter sequence=NDVTSLISTTYPYTGPPPMSHGSSTKYT --parameter file=influenza_xsmall.yaml --parameter split-file-count=10
+argo submit workflow.yaml --parameter sequence=NDVTSLISTTYPYTGPPPMSHGSSTKYT --parameter file=influenza_xsmall.faa --parameter split-file-count=10
 ```
 Here we specify the sequence we are searching for, the name of the file in our local dir, and the number of parallel search jobs we want to have running. To use default parameters, we can just run `argo submit workflow.yaml`
 
@@ -42,6 +42,7 @@ $ helm repo update
 $ helm install argo-artifacts stable/minio --set service.type=LoadBalancer --set fullnameOverride=argo-artifacts
 ```
 And then it should be running on port 9000 by default!
+
 3. Create a bucket called `my-bucket` . The default creds are
 ```
 AccessKey: AKIAIOSFODNN7EXAMPLE
