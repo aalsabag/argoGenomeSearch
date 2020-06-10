@@ -7,7 +7,18 @@ The Argo genome search project is an extension of the k8s genome search project.
 ![execution](./execution.gif)
 
 ## Getting Started
-We begin by creating a container that will split a given faa file in proper FASTA format. The logic for splitting the files can be found in [split.py](./split.py). It takes in a file name as a parameter as well as a number defining how many files it should be split into. To create the docker container we execute:
+We begin by creating a container that will split a given faa file in proper FASTA format. 
+
+We start off with the NCBI influenza amino acid file (faa) weighing in at a whopping 531M. It is not included in this repo, but can be downloaded from [here](https://ftp.ncbi.nih.gov/genomes/INFLUENZA/)
+
+The structure of this file contains an identifier for the genome (preceded by a <) followed by a sequence of characters representing the amino acids (A = Alanine, C = Cysteine, D 
+= Aspartic acid, etc.). This is called [FASTA format](https://en.wikipedia.org/wiki/FASTA_format)
+```
+>gi|62871295|gb|AAY18591|nonstructural protein 2[Influenza A virus (A/New York/93/2002(H3N2))]
+MDSNTVSSFQDILLRMSKMQLGSSSEGLNGMITQFESLKIYRDSLGEAVMRMGDLHLLQNRNGKWREQLG
+QKFEEIRWLIEEVRHRLRTTENSFEQITFMQALQLLFEVEQEIRTFSFQLI
+```
+The logic for splitting the files can be found in [split.py](./split.py). It takes in a file name as a parameter as well as a number defining how many files it should be split into. To create the docker container we execute:
 ```
 docker build . -f Dockerfile.split -t filesplit:latest
 ```
