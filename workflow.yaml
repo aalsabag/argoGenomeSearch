@@ -4,6 +4,8 @@ metadata:
   name : genome-search
   generateName: genome-search-
 spec:
+  podGC:
+    strategy: OnWorkflowSuccess
   entrypoint: split-search
   volumeClaimTemplates:
     - metadata:
